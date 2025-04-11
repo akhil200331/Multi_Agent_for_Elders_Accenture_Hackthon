@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>📋 Health Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&family=Noto+Sans+Telugu&family=Noto+Sans+Devanagari&display=swap" rel="stylesheet">
+<style>
+    body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fdf6ee;
+    padding: 30px;
+    color: #333;
+}
+
+h1 {
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 40px;
+    color: #5e4b43;
+}
+
+.device-id {
+    font-size: 22px;
+    color: #5a4942;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    margin: 0 auto 25px;
+    max-width: 700px;
+}
+
+.card h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    color: #3b2f2f;
+}
+
+.card p {
+    font-size: 20px;
+    line-height: 1.6;
+    color: #444;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 18px;
+    color: #777;
+}
+@keyframes fadeSlideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeSlideUp 0.8s ease;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.02);
+}
+
+    body {
+        font-family: 'Noto Sans', sans-serif;
+    }
+    .lang-te {
+        font-family: 'Noto Sans Telugu', sans-serif;
+    }
+    .lang-hi {
+        font-family: 'Noto Sans Devanagari', sans-serif;
+    }
+</style>
+
+</head>
+<body>
+
+    <h1>🌟 Welcome to Your Health Dashboard</h1>
+
+    <div class="device-id">🔐 Device ID: <strong>{{ device_id }}</strong></div>
+
+    <div style="text-align:center; margin-bottom: 20px;">
+    🌍 Choose Language:
+    <select id="language" onchange="translateAll()">
+        <option value="en">English</option>
+        <option value="te">Telugu</option>
+        <option value="hi">Hindi</option>
+    </select>
+</div>
+
+    <div class="card">
+        <h2>📋 Daily Reminder</h2>
+        <p data-original="{{ daily_reminder_message }}">{{ daily_reminder_message }}</p>
+        <button onclick="speakText(this)">🔊 Read Aloud</button>
+
+    </div>
+
+    <div class="card">
+        <h2>💖 Health Update</h2>
+        <p data-original="{{ health_message }}">{{ health_message }}</p>
+
+        <button onclick="speakText(this)">🔊 Read Aloud</button>
+
+    </div>
+
+    <div class="card">
+        <h2>🛡️ Safety Status</h2>
+        <p data-original="{{ safety_message }}">{{ safety_message }}</p>
+        <button onclick="speakText(this)">🔊 Read Aloud</button>
+
+    </div>
+
+    <div class="footer">
+        🌼 Take care & stay healthy! You're doing great! 💪
+    </div>
+<script>
+    function speakText(button) {
+    const text = button.previousElementSibling.textContent;
+    const lang = document.getElementById("language").value;
+
+    const speech = new SpeechSynthesisUtterance(text);
+    
+    if (lang === 'te') speech.lang = 'te-IN';
+    else if (lang === 'hi') speech.lang = 'hi-IN';
+    else speech.lang = 'en-IN';
+
+    speech.pitch = 1;
+    speech.rate = 0.9;
+    window.speechSynthesis.speak(speech);
+}
+
+    async function translateText(text, lang) {
+    if (lang === 'en') return text;
+    const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${lang}`);
+    const data = await res.json();
+    return data.responseData.translatedText;
+}
+
+async function translateAll() {
+    const lang = document.getElementById("language").value;
+    const paragraphs = document.querySelectorAll(".card p");
+
+    for (let p of paragraphs) {
+        const original = p.getAttribute("data-original") || p.textContent;
+        p.setAttribute("data-original", original);
+        const translated = await translateText(original, lang);
+        p.textContent = translated;
+
+        // Clear previous font class
+        p.classList.remove("lang-te", "lang-hi");
+
+        // Add appropriate font class
+        if (lang === 'te') p.classList.add("lang-te");
+        else if (lang === 'hi') p.classList.add("lang-hi");
+    }
+}
+
+
+</script>
+
+</body>
+</html>
