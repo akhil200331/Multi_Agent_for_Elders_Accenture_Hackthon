@@ -45,8 +45,9 @@ This gap can compromise their well-being, highlighting the need for a **user-fri
 | **Caretaker Agent** | Views health dashboard and manages reminder schedules |
 | **Elder User Agent** | Receives personalized notifications and interacts via device |
 
-> ![Agent Interaction Diagram](https://your_uploaded_image_link)  
-*(Replace this with your actual uploaded diagram link or GitHub assets folder.)*
+# Agent Interaction Diagram
+![image](https://github.com/user-attachments/assets/f6a858d2-044d-48ca-a6ab-dd2d186722bf)
+
 
 ---
 
